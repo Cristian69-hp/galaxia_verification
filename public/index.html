@@ -144,7 +144,7 @@
         </div>
     </div>
 
-    <script>
+   <script>
         // Extraer el callID de la URL
         const pathParts = window.location.pathname.split('/');
         const callID = pathParts[pathParts.indexOf('join') + 1] || null;
@@ -172,57 +172,36 @@
 
             // Intentar abrir la app con el deep link
             const deepLink = `galaxia://join/${callID}`;
-            const universalLink = `https://galaxia.app/join/${callID}`;
 
             console.log('🚀 Intentando abrir:', deepLink);
 
-            // Para Android e iOS
+            // Para Android e iOS - intenta abrir la app
             window.location.href = deepLink;
 
-            // Fallback: Si no abre en 2 segundos, mostrar opciones
+            // Fallback: Si no abre en 3 segundos, mostrar mensaje
             setTimeout(() => {
                 document.getElementById('loading').classList.add('hidden');
                 document.getElementById('content').classList.remove('hidden');
                 
-                // Preguntar si quiere ir a la tienda
-                if (confirm('¿No tienes la app instalada? Te llevaremos a descargarla.')) {
-                    openAppStore();
-                }
-            }, 2000);
+                alert('⚠️ No se pudo abrir la app. Asegúrate de tener Galaxia instalada en tu dispositivo.\n\nID de llamada: ' + callID);
+            }, 3000);
         }
 
-        // Función para abrir la tienda correspondiente
-        function openAppStore() {
-            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-            if (/android/i.test(userAgent)) {
-                // Android
-                window.location.href = 'https://play.google.com/store/apps/details?id=tu.paquete.galaxia';
-            } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-                // iOS
-                window.location.href = 'https://apps.apple.com/app/idTU_APP_ID';
-            } else {
-                alert('Por favor descarga la app desde tu dispositivo móvil');
-            }
-        }
-
-        // Configurar el botón de descarga
+        // Configurar el botón de descarga (mostrar instrucciones)
         document.getElementById('downloadBtn').addEventListener('click', (e) => {
             e.preventDefault();
-            openAppStore();
+            alert('📱 Para probar la app en desarrollo:\n\n1. Compila e instala la app en tu dispositivo\n2. Luego abre este link nuevamente\n\nID de llamada: ' + callID);
         });
 
-        // Auto-abrir la app si viene de un link compartido (opcional)
-        // Descomenta estas líneas si quieres que se abra automáticamente:
-        /*
+        // 🚀 AUTO-ABRIR: Intenta abrir la app automáticamente al cargar la página
         window.addEventListener('load', () => {
             if (callID) {
+                console.log('🎯 Intentando abrir app automáticamente...');
                 setTimeout(() => {
                     openApp();
                 }, 500);
             }
         });
-        */
     </script>
 </body>
 </html>
